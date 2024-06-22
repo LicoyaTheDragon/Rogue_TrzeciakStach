@@ -1,2 +1,13 @@
-﻿// See https://aka.ms/new-console-template for more information
-Console.WriteLine("Hello, World webhebhwvfhdewyfhevfhevfhevfhfvhevwhfvbwe!");
+﻿using System;
+
+namespace Rogue
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Game game = new Game();
+            game.Run();
+        }
+    }
+}
