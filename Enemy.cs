@@ -6,7 +6,7 @@ namespace Rogue
     {
         public int X { get; private set; }
         public int Y { get; private set; }
-        private Random random; //Generator liczb losowych ruchu wroga
+        private Random random; 
 
         public Enemy(int x, int y)
         {
@@ -20,9 +20,6 @@ namespace Rogue
             Console.SetCursorPosition(X, Y);
             Console.Write('&');
         }
-
-
-        //Przemieszczanie wroga w losowym kierunku
 
         public void Move(Map map)
         {

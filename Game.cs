@@ -5,13 +5,11 @@ namespace Rogue
 {
     class Game
     {
-        //Niezbędne obiekty
-
         private Map map;
         private Player player;
         private Enemy[] enemies;
-
-        //Ustalenie startowej pozycji gracza i wrogów
+        private Coin[] coins;
+        private Merchant merchant;
 
         public Game()
         {
@@ -23,10 +21,14 @@ namespace Rogue
                 new Enemy(18, 7),
                 new Enemy(6, 6)
             };
+            coins = new Coin[] 
+            {
+                new Coin(4, 3),
+                new Coin(10, 6),
+                new Coin(15, 8)
+            };
+            merchant = new Merchant(10, 1);
         }
-
-
-        //Uruchomienie gry i stworzenie planszy z wrogami oraz graczem
 
         public void Run()
         {
@@ -37,12 +39,16 @@ namespace Rogue
             {
                 enemy.Draw();
             }
+            foreach (var coin in coins)
+            {
+                coin.Draw();
+            }
+            merchant.Draw();
+            DrawCoinCount();
 
-        //Rysowanie mapy jeszcze raz z nowymi pozycjami gracza i wrogów jeśli gracz sie poruszył
-        
             while (true)
             {
-                bool playerMoved = player.Move(map);
+                bool playerMoved = player.Move(map, coins, merchant);
 
                 if (playerMoved)
                 {
@@ -54,8 +60,44 @@ namespace Rogue
                         enemy.Move(map);
                         enemy.Draw();
                     }
+                    foreach (var coin in coins)
+                    {
+                        if (!coin.Collected)
+                        {
+                            coin.Draw();
+                        }
+                    }
+                    merchant.Draw();
+                    DrawCoinCount();
                 }
+
+                if (merchant.TotalCoinsCollected == coins.Length)
+                {
+                    EndGame();
+                    break;
+                }
+
+                Thread.Sleep(100);
             }
+        }
+
+
+
+
+
+        private void DrawCoinCount()
+        {
+            Console.SetCursorPosition(0, map.MapHeight + 1);
+            Console.Write($"Coins Collected: {player.CoinsCollected}");
+        }
+
+
+
+        private void EndGame()
+        {
+            Console.Clear();
+            Console.SetCursorPosition(0, 0);
+            Console.WriteLine("Game Over!");
         }
     }
 }

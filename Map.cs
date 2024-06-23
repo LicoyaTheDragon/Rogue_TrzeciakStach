@@ -2,13 +2,12 @@ using System;
 
 namespace Rogue
 {
-    //Tworzymy mampę jako tablicę znaków
     class Map
     {
         private char[,] mapData = new char[,]
         {
             { '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#' },
-            { '#', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '#' },
+            { '#', '.', '.', '.', '.', '.', '.', '.', '.', '.', 'M', '.', '.', '.', '.', '.', '.', '.', '.', '.', '#' },
             { '#', '.', '#', '#', '#', '#', '.', '#', '#', '#', '#', '#', '.', '#', '#', '#', '#', '#', '.', '#', '#' },
             { '#', '.', '#', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '#', '.', '.', '.', '#' },
             { '#', '.', '#', '.', '#', '#', '#', '.', '#', '#', '#', '#', '#', '#', '.', '#', '#', '#', '.', '.', '#' },
@@ -20,7 +19,12 @@ namespace Rogue
             { '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#' }
         };
 
-        //Rysuje mapę
+
+
+
+
+        public int MapHeight => mapData.GetLength(0);
+
         public void Draw()
         {
             for (int y = 0; y < mapData.GetLength(0); y++)
@@ -33,13 +37,20 @@ namespace Rogue
             }
         }
 
-        public bool IsWalkable(int x, int y) // Sprawdza, czy pozycja jest możliwa do przejścia
+        public bool IsWalkable(int x, int y)
         {
-            if (x < 0 || x >= mapData.GetLength(1) || y < 0 || y >= mapData.GetLength(0)) // Sprawdza, czy pozycja jest wewnątrz granic mapy, (Bound of Array Exception)
+            if (x < 0 || x >= mapData.GetLength(1) || y < 0 || y >= mapData.GetLength(0))
             {
                 return false; 
             }
-            return mapData[y, x] == '.'; // Zwraca true, jeśli pozycja jest podłogą ('.'), false, jeśli ścianą ('#')
+            return mapData[y, x] == '.';
+        }
+        public void UpdateCoin(Coin coin)
+        {
+            if (coin.X >= 0 && coin.X < mapData.GetLength(1) && coin.Y >= 0 && coin.Y < mapData.GetLength(0))
+            {
+                mapData[coin.Y, coin.X] = '.';
+            }
         }
     }
 }

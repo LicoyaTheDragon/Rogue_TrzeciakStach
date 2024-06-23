@@ -6,11 +6,12 @@ namespace Rogue
     {
         public int X { get; private set; }
         public int Y { get; private set; }
-
+        public int CoinsCollected { get; private set; } 
         public Player(int x, int y)
         {
             X = x;
             Y = y;
+            CoinsCollected = 0;
         }
 
         public void Draw()
@@ -18,11 +19,7 @@ namespace Rogue
             Console.SetCursorPosition(X, Y);
             Console.Write('@');
         }
-
-
-        //Ruch gracza
-
-        public bool Move(Map map)
+        public bool Move(Map map, Coin[] coins, Merchant merchant)
         {
             if (Console.KeyAvailable)
             {
@@ -30,8 +27,6 @@ namespace Rogue
 
                 int newX = X;
                 int newY = Y;
-
-                //Zmienia pozycję w zależności od wciśniętego klawisza
 
                 switch (key)
                 {
@@ -48,17 +43,36 @@ namespace Rogue
                         newX++;
                         break;
                 }
-
-                //Sprawdzenie czy można przejść
-
-                if (map.IsWalkable(newX, newY))
+                if (map.IsWalkable(newX, newY) || (newX == merchant.X && newY == merchant.Y))
                 {
                     X = newX;
                     Y = newY;
+                    CollectCoin(newX, newY, coins, map);
+                    InteractWithMerchant(newX, newY, merchant);
                     return true;
                 }
             }
             return false;
+        }
+
+        private void CollectCoin(int x, int y, Coin[] coins, Map map)
+        {
+            foreach (var coin in coins)
+            {
+                if (coin != null && coin.X == x && coin.Y == y)
+                {
+                    CoinsCollected++;
+                    coin.Collect(); 
+                    map.UpdateCoin(coin); 
+                }
+            }
+        }private void InteractWithMerchant(int x, int y, Merchant merchant)
+        {
+            if (x == merchant.X && y == merchant.Y)
+            {
+                merchant.CollectCoins(CoinsCollected);
+                CoinsCollected = 0;
+            }
         }
     }
 }
